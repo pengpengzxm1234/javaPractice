@@ -1,4 +1,4 @@
-package com.bjsxt.height.lock020;
+package com.bjsxt.base.lock020;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
