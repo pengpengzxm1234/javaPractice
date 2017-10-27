@@ -1,4 +1,4 @@
-package com.bjsxt.height.lock021;
+package com.bjsxt.base.lock021;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
@@ -65,10 +65,10 @@ public class UseReentrantReadWriteLock {
 			}
 		}, "t4");		
 		
-//		t1.start();
-//		t2.start();
+/*		t1.start();
+		t2.start();*/
 		
-//		t1.start(); // R 
+//		t1.start(); // R
 //		t3.start(); // W
 		
 		t3.start();

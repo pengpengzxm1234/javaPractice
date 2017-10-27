@@ -1,9 +1,12 @@
-package com.bjsxt.height.lock020;
+package com.bjsxt.base.lock020;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * 重入锁
+ */
 public class UseReentrantLock {
 	
 	private Lock lock = new ReentrantLock();
