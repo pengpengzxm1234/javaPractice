@@ -23,4 +23,8 @@ public class SinglentonDoubleCheck {
         }
         return instance;
     }
+
+    public static void main(String[] args){
+        SinglentonDoubleCheck sg = SinglentonDoubleCheck.getInstance();
+    }
 }
