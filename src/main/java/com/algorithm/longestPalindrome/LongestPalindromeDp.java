@@ -27,7 +27,7 @@ public class LongestPalindromeDp {
         int start = 0;
         char[] s = str.toCharArray();
         Integer[][] dp = new Integer[length][length];
-        for(int i=0; i<length; i++){
+        for(int i=0; i<length; i++){//提取单个字符和相邻两个相同的字符的回文子串 即，长度为1和2的回文子串
             dp[i][i] = 1;
             if(i<length - 1){
                 if(s[i] == s[i + 1]){
@@ -45,6 +45,7 @@ public class LongestPalindromeDp {
                     dp[i][j] = 1;
                     start = i;
                     longest = l;
+                    System.out.println("start:" + start + " ,longest:" + longest);
                 }
             }
         }
