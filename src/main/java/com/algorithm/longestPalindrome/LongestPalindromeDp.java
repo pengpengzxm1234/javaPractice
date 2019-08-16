@@ -11,6 +11,10 @@ import java.util.Vector;
  *   dp[i][i]=1
  *   dp[i][i+1]=1 if str[i]==str[i+1]
  *   上式的意义是单个字符，两个相同字符都是回文串。
+ *
+ *   这里我们需要用一个二维数组dp来作为备忘录，记录子问题的结果，以便重复的计算。
+ *   这也是动态规划的精髓所在。
+ *   不过这种做法的算法复杂度也是O(n^2)
  */
 public class LongestPalindromeDp {
 
@@ -54,7 +58,7 @@ public class LongestPalindromeDp {
     }
 
     public static void main(String[] args){
-        String str = "abdba";
+        String str = "abddba";
         LongestPalindromeDp longestPalindromeForce = new LongestPalindromeDp();
         System.out.println("动态规划方法——最长回文子串是：" + longestPalindromeForce.longestPalindromeDp(str));
     }
