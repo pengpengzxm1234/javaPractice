@@ -1,6 +1,9 @@
 package com.algorithm.binaryTree;
 
+import sun.rmi.server.InactiveGroupException;
+
 import java.util.Stack;
+import java.util.regex.Matcher;
 
 /**
  * 二叉树遍历
@@ -171,10 +174,40 @@ public class TraverseBinaryTree {
         System.out.println();
     }
 
+
+    /**
+     * 二叉树最小深度
+     * 递归方法（利用系统栈）
+     * 额外空间为系统栈的高度
+     * @param head
+     */
+    public Integer minDepth1(Node head){
+        if(null == head){return 0;}
+        return process(head, 1);
+    }
+
+    public Integer process(Node node, Integer level){
+        if(node.left == null && node.right == null){//找到了叶子节点
+            return level;
+        }
+        Integer ans = Integer.MAX_VALUE;
+        //遍历所有的节点，找到叶子节点，并比较叶子节点高度，取小的
+        if(node.left != null){
+            ans = Math.min(process(node.left, level + 1), ans);
+        }
+        if(node.right != null){
+            ans = Math.min(process(node.right, level + 1), ans);
+        }
+
+        return ans;
+    }
+
+
     public static void main(String[] args)throws Exception{
         Node node = new TraverseBinaryTree.Node(5);
         node.left = new TraverseBinaryTree.Node(3);
         node.right = new TraverseBinaryTree.Node(6);
+        node.right.right = new TraverseBinaryTree.Node(7);
         TraverseBinaryTree tree = new TraverseBinaryTree();
        /* tree.preOrderRecur(node);
         tree.posOrderRecur(node);
@@ -185,5 +218,6 @@ public class TraverseBinaryTree {
         tree.inOrderUnRecur(node);
         tree.postOrderUnRecur1(node);
         tree.postOrderUnRecur2(node);
+        System.out.print(tree.minDepth1(node));
     }
 }
