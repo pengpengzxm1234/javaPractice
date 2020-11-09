@@ -174,6 +174,146 @@ public class TraverseBinaryTree {
         System.out.println();
     }
 
+    /**
+     * morris 遍历 二叉树
+     * 初始节点是cur是头节点，根据以下标准移动cur
+     * 1、如果cur==null，过程停止，否则继续下面过程
+     * 2、如果cur没有左子树，让cur向右移动，即令 cur = cur.right
+     * 3、如果cur有左子树，则找到cur左子树上的最右节点，记为mostRight
+     * 1）如果mostRight的right指针指向null，则令mostRight.right = cur,也就是让mostRight的right指针指向当前节点，然后让cur向左移动，即令 cur = cur.left
+     * 2）如果mostRight的right指针指向cur，则令mostRight.right = null, 也就是让mostRight的right指针指向null，然后让cur向右移动，即令 cur = cur.right
+     */
+    public void morris(Node head){
+        if(null == head){return;}
+        Node cur = head;
+        Node mostRight = null;
+        while (cur != null){
+            mostRight = cur.left;
+            if(mostRight != null){//如果当前节点有左子树
+                //找到左子树的最右节点
+                while (mostRight.right != null && mostRight.right != cur){
+                    mostRight = mostRight.right;
+                }
+                //从上面的while里出来后，mostRight就是cur左子树上最右的节点
+                if(mostRight.right == null){//如果mostRight.right指向null
+                    mostRight.right = cur;//让其指向cur
+                    cur = cur.left;//cur向左移动
+                    continue;//回到最外层的while，继续判断cur的情况
+                }else {//如果mostRight.right指向cur
+                    mostRight.right = null;
+                }
+            }
+            //没有左子树，向右移动
+            cur = cur.right;
+        }
+    }
+
+    /**
+     * morris先序遍历二叉树
+     */
+    public void morrisPre(Node head){
+        if(null == head){return;}
+        Node cur = head;
+        Node mostRight = null;
+        while (cur != null){
+            mostRight = cur.left;
+            if (mostRight != null){
+                while (mostRight.right != null && mostRight.right!= cur){
+                    mostRight = mostRight.right;
+                }
+                if(mostRight.right == null){
+                    mostRight.right = cur;
+                    System.out.print(cur.value + " ");//打印行为
+                    cur = cur.left;
+                    continue;
+                }else {
+                    mostRight.right = null;
+                }
+            }else {
+                System.out.print(cur.value + " ");
+            }
+            cur = cur.right;
+        }
+        System.out.println();
+    }
+
+
+    /**
+     * morris中序遍历二叉树
+     */
+    public void morrisIn(Node head){
+        if(null == head){return;}
+        Node cur = head;
+        Node mostRight = null;
+        while (cur != null){
+            mostRight = cur.left;
+            if(mostRight != null){
+                while (mostRight.right != null && mostRight.right != cur){
+                    mostRight = mostRight.right;
+                }
+                if(mostRight.right == null){
+                    mostRight.right = cur;
+                    cur = cur.left;
+                    continue;
+                }else {
+                    mostRight.right = null;
+                }
+            }
+            System.out.print(cur.value + " ");
+            cur = cur.right;
+        }
+        System.out.println();
+    }
+
+    /**
+     * morris后序遍历二叉树
+     */
+    public void morrisPos(Node head){
+        if(null == head){return;}
+        Node cur = head;
+        Node mostRight = null;
+        while (cur != null){
+            mostRight = cur.left;
+            if(mostRight != null){
+                while (mostRight.right != null && mostRight.right != cur){
+                    mostRight = mostRight.right;
+                }
+                if(mostRight.right == null){
+                    mostRight.right = cur;
+                    cur = cur.left;
+                    continue;
+                }else {
+                    mostRight.right = null;
+                    printEdge(cur.left);
+                }
+            }
+            cur = cur.right;
+        }
+        printEdge(head);
+        System.out.println();
+    }
+
+    private void printEdge(Node head){
+        Node tail = reverseEdge(head);
+        Node cur  = tail;
+        while (cur != null){
+            System.out.print(cur.value + " ");
+            cur = cur.right;
+        }
+        reverseEdge(tail);
+    }
+
+    private Node reverseEdge(Node from){
+        Node pre = null;
+        Node next = null;
+        while (from != null){
+            next = from.right;
+            from.right = pre;
+            pre = from;
+            from = next;
+        }
+        return pre;
+    }
 
     /**
      * 二叉树最小深度
@@ -214,10 +354,13 @@ public class TraverseBinaryTree {
         */
         //tree.inOrderRecur(node);
         tree.preOrderUnRecur(node);
+        tree.morrisPre(node);
         System.out.println();
         tree.inOrderUnRecur(node);
+        tree.morrisIn(node);
         tree.postOrderUnRecur1(node);
         tree.postOrderUnRecur2(node);
+        tree.morrisPos(node);
         System.out.print(tree.minDepth1(node));
     }
 }
