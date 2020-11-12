@@ -2,6 +2,8 @@ package com.algorithm.binaryTree;
 
 import sun.rmi.server.InactiveGroupException;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 import java.util.regex.Matcher;
 
@@ -343,6 +345,155 @@ public class TraverseBinaryTree {
     }
 
 
+    /************************************************************************
+     *
+     * 二叉树的序列化和反序列化
+     *
+     * 二叉树被记录成文件的过程叫做二叉树的序列化，通过文件内容重建原来二叉树的过程叫做二叉树的反序列化
+     * 给定一个二叉树的头节点head，已知二叉树节点值的类型是32位整型，设计一种二叉树序列化和反序列化的方案
+     **********************************************************************/
+
+    /**
+     * 方法一
+     * 通过先序遍历实现序列化和反序列化
+     *
+     * 1、先序遍历序列化
+     * 假设序列化的结果字符串为str，初始值str = "",
+     * 先序遍历二叉树，如果遇到null节点，就在str的末尾加上“#！”， “#”表示这个节点为空，节点的值不存在
+     * “！”表示一个值的结束，如果不在每个节点值后面加上“！”， 最后产生的结果会有歧义
+     */
+    public String serialByPre(Node head){
+        if(head == null){return "#!";}
+        String res = head.value + "!";
+        res += serialByPre(head.left);
+        res += serialByPre(head.right);
+        return res;
+    }
+    /**
+     * 2、先序遍历反序列化
+     */
+
+    public Node reconByPreString(String preStr){
+        String[] values = preStr.split("!");
+        Queue<String> queue = new LinkedList<>();
+        for(String value :  values){
+            queue.offer(value);
+        }
+        return reconPreOrder(queue);
+    }
+
+    public Node reconPreOrder(Queue<String> queue){
+        String value = queue.poll();
+        if(value.equals("#")){
+            return null;
+        }
+        Node head = new Node(Integer.valueOf(value));
+        head.left = reconPreOrder(queue);
+        head.right = reconPreOrder(queue);
+        return head;
+    }
+
+    /**
+     * 方法二：
+     * 通过层遍历实现序列化和反序列化
+     */
+    public String serialByLevel(Node head){
+        if(head == null){return "#";}
+        String res = head.value + "!";
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(head);
+        while (!queue.isEmpty()){
+            head = queue.poll();
+            if(head.left != null){
+                res += head.left.value + "!";
+                queue.offer(head.left);
+            }else {
+                res += "#!";
+            }
+            if(head.right != null){
+                res += head.right.value + "!";
+                queue.offer(head.right);
+            }else {
+                res += "#!";
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 反序列化
+     */
+    public Node reconByLevelString(String levelStr){
+        String[] values = levelStr.split("!");
+        Queue<Node> queue = new LinkedList<>();
+        int index = 0;
+        Node head = generateNodeByString(values[index++]);
+        if(head != null){
+            queue.offer(head);
+        }
+        Node node = null;
+        while (queue.isEmpty()){
+            node = queue.poll();
+            node.left = generateNodeByString(values[index++]);
+            node.right = generateNodeByString(values[index++]);
+            if(node.left != null){
+                queue.offer(node.left);
+            }
+            if(node.right != null){
+                queue.offer(node.right);
+            }
+        }
+        return head;
+
+    }
+
+    public Node generateNodeByString(String value){
+        if(value.equals("#")){
+            return null;
+        }
+        return new Node(Integer.valueOf(value));
+    }
+
+
+    /***********************************
+     *
+     * 二叉树的按层打印
+     *
+     *************************************/
+    public void printByLevel(Node head){
+        if(head == null){return;}
+        int level = 1;
+        Node last = head;
+        Node nLast = null;
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(head);
+        System.out.print("Level " + (level++) + " : ");
+        while (!queue.isEmpty()){
+            head = queue.poll();
+            System.out.print(head.value + " ");
+            if(head.left != null){
+                nLast = head.left;
+                queue.offer(head.left);
+            }
+            if(head.right != null){
+                nLast = head.right;
+                queue.offer(head.right);
+            }
+            if(head == last && !queue.isEmpty()){
+                System.out.print("\nLevel " + (level++) + " : ");
+                last = nLast;
+            }
+        }
+        System.out.println();
+    }
+
+
+
+    /**
+     *
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args)throws Exception{
         Node node = new TraverseBinaryTree.Node(5);
         node.left = new TraverseBinaryTree.Node(3);
@@ -355,6 +506,7 @@ public class TraverseBinaryTree {
         //tree.inOrderRecur(node);
         tree.preOrderUnRecur(node);
         tree.morrisPre(node);
+        System.out.println(tree.serialByPre(node));
         System.out.println();
         tree.inOrderUnRecur(node);
         tree.morrisIn(node);
@@ -362,5 +514,7 @@ public class TraverseBinaryTree {
         tree.postOrderUnRecur2(node);
         tree.morrisPos(node);
         System.out.print(tree.minDepth1(node));
+        System.out.println();
+        tree.printByLevel(node);
     }
 }
