@@ -2,6 +2,7 @@ package com.algorithm.binaryTree;
 
 import sun.rmi.server.InactiveGroupException;
 
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
@@ -488,6 +489,59 @@ public class TraverseBinaryTree {
     }
 
 
+    /**
+     * ZigZag打印
+     * level 1 from left to right
+     * level 2 from right to left
+     */
+    public void printByZigZag(Node head){
+        if(null == head){return;}
+        Deque<Node> deque = new LinkedList<>();
+        int level = 1;
+        boolean lr  = true;
+        Node last = head;
+        Node nLast = null;
+        deque.offerFirst(head);
+        pringLevelAndOrientation(level, lr);
+        while (!deque.isEmpty()){
+            if(lr){
+                head = deque.pollFirst();
+                if(head.left != null){
+                    nLast = nLast == null ? head.left : nLast;
+                    deque.offerLast(head.left);
+                }
+                if(head.right != null){
+                    nLast = nLast == null ? head.right : nLast;
+                    deque.offerLast(head.right);
+                }
+            }else {
+                head = deque.pollLast();
+                if(head.right != null){
+                    nLast = nLast == null ? head.right : nLast;
+                    deque.offerFirst(head.right);
+                }
+                if(head.left != null){
+                    nLast = nLast == null ? head.left : nLast;
+                    deque.offerFirst(head.left);
+                }
+            }
+            System.out.print(head.value + " ");
+            if(head == last && !deque.isEmpty()){
+                lr = !lr;
+                last = nLast;
+                nLast = null;
+                System.out.println();
+                pringLevelAndOrientation(level++, lr);
+            }
+        }
+        System.out.println();
+    }
+
+    public void pringLevelAndOrientation(int level, boolean lr){
+        System.out.print("Level " + level + " from");
+        System.out.print(lr ? "left to right: " : "right to left: ");
+    }
+
 
     /**
      *
@@ -516,5 +570,6 @@ public class TraverseBinaryTree {
         System.out.print(tree.minDepth1(node));
         System.out.println();
         tree.printByLevel(node);
+        tree.printByZigZag(node);
     }
 }
