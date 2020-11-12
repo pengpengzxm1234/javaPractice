@@ -502,7 +502,7 @@ public class TraverseBinaryTree {
         Node last = head;
         Node nLast = null;
         deque.offerFirst(head);
-        pringLevelAndOrientation(level, lr);
+        printLevelAndOrientation(level, lr);
         while (!deque.isEmpty()){
             if(lr){
                 head = deque.pollFirst();
@@ -531,13 +531,13 @@ public class TraverseBinaryTree {
                 last = nLast;
                 nLast = null;
                 System.out.println();
-                pringLevelAndOrientation(level++, lr);
+                printLevelAndOrientation(level++, lr);
             }
         }
         System.out.println();
     }
 
-    public void pringLevelAndOrientation(int level, boolean lr){
+    public void printLevelAndOrientation(int level, boolean lr){
         System.out.print("Level " + level + " from");
         System.out.print(lr ? "left to right: " : "right to left: ");
     }
