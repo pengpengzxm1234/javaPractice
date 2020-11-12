@@ -76,5 +76,19 @@
             <version>1.7.25</version>
             <!-- <scope>test</scope> -->
         </dependency>
+        <!--netty-->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.43.Final</version>
+        </dependency>
+
+        <!--rocketmq-->
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+            <version>4.6.1</version>
+        </dependency>
+
     </dependencies>
 </project>
