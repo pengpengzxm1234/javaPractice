@@ -542,6 +542,88 @@ public class TraverseBinaryTree {
         System.out.print(lr ? "left to right: " : "right to left: ");
     }
 
+    /****************************************************8
+     *
+     * 判断一颗二叉树是否为搜索二叉树和完全二叉树
+     * 1、搜索二叉树概念：一棵树的左子树都小于父节点，右子树大于父节点，所有子树都成立
+     * 2、平衡二叉树概念：二叉树的每一层从左到右都是满的，中间无间隔
+     *
+     **************************************************/
+
+    /**
+     * 判断是否搜索二叉树——morris中序遍历判断
+     * 1、判断一颗二叉树是否为搜索二叉树，只要改写一个二叉树中序遍历，在遍历的过程中看节点值是否都满足递增的即可
+     * 2、Morris遍历分调整二叉树结构和恢复二叉树结构两个阶段。因此,当发现节点节点的值时降序时，不能直接返回false，
+     * 这么做可能会跳过恢复阶段，从而破坏二叉树的结构
+     * @param head
+     * @return
+     * pre 根节点
+     */
+    public boolean isBST(Node head){
+        if(null == head){return true;}
+        boolean res = true;
+        Node pre = null;
+        Node cur1 = head;
+        Node cur2 = null;
+        while (cur1 != null){
+            cur2 = cur1.left;
+            if(cur2 != null){
+                while (cur2.right != null && cur2.right != cur1){
+                    cur2 = cur2.right;
+                }
+                if(cur2.right == null){
+                    cur2.right = cur1;
+                    cur1 = cur1.left;
+                    continue;
+                }else {
+                    cur2.right = null;
+                }
+            }
+            if(pre != null && pre.value > cur1.value){
+                res = false;
+            }
+            pre = cur1;
+            cur1 = cur1.right;
+        }
+        return res;
+    }
+
+    /**
+     * 判断是否完全二叉树 实现标准
+     * 1、按层遍历，从每层的左边向右边依次遍历所有的节点
+     * 2、如果当前节点有右孩子节点，但没有左孩子节点，则直接返回false
+     * 3、当前节点并不是左右孩子全有，那么之后的节点必须都为叶子节点，否则返回false
+     * 4、遍历过程中如果部返回false,则遍历结束后返回true
+     * @param head
+     * @return
+     */
+    public boolean isCBT(Node head){
+        if(null == head){return true;}
+        Queue<Node> queue = new LinkedList<>();
+        boolean leaf = false;//标记后续节点是否都应该时叶子节点 false 不是 true 是
+        Node l = null;
+        Node r = null;
+        queue.offer(head);
+        while (!queue.isEmpty()){
+            head = queue.poll();
+            l = head.left;
+            r = head.right;
+            //判断节点之间是否有间隔，有间隔则不是完全二叉树
+            if((leaf && (l != null || r != null)) || (l == null && r != null)){
+                return false;
+            }
+            if(null != l){
+                queue.offer(l);
+            }
+            if(null != r){
+                queue.offer(r);
+            }else {
+                leaf = true;
+            }
+        }
+        return true;
+    }
+
 
     /**
      *
