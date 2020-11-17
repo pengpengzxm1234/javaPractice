@@ -735,6 +735,70 @@ public class TraverseBinaryTree {
         return new ReturnType1(isBalanced, height);
     }
 
+    /********************
+     *
+     * 通过有序数组生成平衡搜索二叉树
+     * 问题1、给定一个数组arr，已知其中没有重复值，判断arr是否可能是节点类型为整型的搜索二叉树后续遍历的结果
+     * 问题2、如果整型数组arr中没有重复值，且已知是一颗搜索二叉树的后续遍历结果，通过数组arr重构二叉树
+     *************************/
+
+    /**
+     * 问题1解法：
+     * 后续遍历，数组中最后一个节点是根节点；
+     * 根据搜索二叉树的特点，比后序数组最后一个元素小的数组会在数组的左边，比后序数组最后一个元素大的数组会在数组的右边
+     * 左边数组相当于数组的左子树，右边数组相当于数组的右子树，只要递归的进行如上判断即可
+     */
+    public boolean isPostArray(int[] arr){
+        return isPost(arr, 0, arr.length - 1);
+    }
+
+    public boolean isPost(int[] arr, int start, int end){
+        if(start == end){return true;}
+        int less = -1;//比根节点小的数组的最后一位
+        int more = end;//比根节点大的数组的第一位
+        for(int i= start; i< end; i++){
+            if(arr[end] > arr[i]){
+                less = i;
+            }else {
+                more = more == end ? i : more;
+            }
+        }
+        if(less == -1 || more == end){//所有节点都在左子树或者都在右子树
+            return isPost(arr, start, end - 1);
+        }
+        if(less != more - 1){//如果是平衡二叉树的后序遍历，less和more应该是相临的
+            return false;
+        }
+        return isPost(arr, start, less) && isPost(arr, more, end - 1);
+    }
+
+    /**
+     * 问题2解法：
+     * 一颗树的后序数组最后一个值为二叉树头节点，数组做部分都比头节点的值小，用来生成头节点的左子树
+     * 剩下的部分用来生成右子树
+     */
+    public Node posArrayToBST(int[] posArr){
+        if(null == posArr){return null;}
+        return posToBST(posArr, 0, posArr.length - 1);
+    }
+
+    public Node posToBST(int[] posArr, int start, int end){
+        if(start > end){return null;}
+        Node head = new Node(posArr[end]);
+        int less = -1;
+        int more = end;
+        for(int i=start; i< end; i++){
+            if(posArr[end] > posArr[i]){
+                less = i;
+            }else {
+                more = more == end ? i : more;
+            }
+        }
+        head.left = posToBST(posArr, start, less);
+        head.right = posToBST(posArr, more, end - 1);
+        return head;
+    }
+
 
     /**
      *
