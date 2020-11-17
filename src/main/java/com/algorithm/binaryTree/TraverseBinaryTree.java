@@ -551,7 +551,7 @@ public class TraverseBinaryTree {
      **************************************************/
 
     /**
-     * 判断是否搜索二叉树——morris中序遍历判断
+     * 判断是否搜索二叉树——morris中序遍历判断 搜索二叉树的中序遍历结果是从小到大有序的
      * 1、判断一颗二叉树是否为搜索二叉树，只要改写一个二叉树中序遍历，在遍历的过程中看节点值是否都满足递增的即可
      * 2、Morris遍历分调整二叉树结构和恢复二叉树结构两个阶段。因此,当发现节点节点的值时降序时，不能直接返回false，
      * 这么做可能会跳过恢复阶段，从而破坏二叉树的结构
@@ -622,6 +622,117 @@ public class TraverseBinaryTree {
             }
         }
         return true;
+    }
+
+    /**
+     * 找到二叉树中的最大搜索二叉子树
+     * Q:给定一颗二叉树的头节点head，已知其中所有节点的值都不同，找到含有节点最多的搜索二叉子树，并返回这课子树的头节点
+     */
+
+    public Node getMaxBST(Node node){
+        return process(node).maxBSTHead;
+    }
+
+    /**
+     * 树形dp套路：（利用分析可能性求解在二叉树上做类似动态规划的问题）
+     * 使用前提：如果题目是S规则，则求解流程可以定成以每一个节点为头节点的子树在S规则下的每一个答案，并且最终答案一定在其中
+     * 就是利用递归函数设计一个二叉树后续遍历的过程：先遍历左子树收集信息，然后是右子树收集信息，最后再头节点做信息整合。
+     * 第一步：以某个节点x为头节点的子树中，分析答案有哪些可能性，并且这种分析是以x的左子树、x的右子树和x整棵树的角度来考虑的可能性
+     * 第二步：根据第一步的可能性分析，列出所需要的信息
+     * 第三步：合并第二步的信息，对左树和右树提出同样的要求，并写出信息结构
+     * 第四步：设计递归函数，递归函数是处理以x为头节点的情况下的答案，包括设计递归的base case，默认直接得到左树和右树的信息，以及把可能性做整合，并且要
+     *        返回第三步的信息结构
+     */
+    class ReturnType{
+        public Node maxBSTHead;
+        public int maxBSTSize;
+        public int max;
+        public int min;
+
+        public ReturnType(Node maxBSTHead, int maxBSTSize, int min, int max) {
+            this.maxBSTHead = maxBSTHead;
+            this.maxBSTSize = maxBSTSize;
+            this.max = max;
+            this.min = min;
+        }
+    }
+
+    public ReturnType process(Node x){
+        //base case:如果子树是空的
+        //最小值为系统最大
+        //最大值为系统最小
+        if(x == null){
+            return new ReturnType(null, 0, Integer.MAX_VALUE, Integer.MIN_VALUE);
+        }
+        //默认直接得到左树全部信息
+        ReturnType lDate = process(x.left);
+        //默认直接得到右树全部信息
+        ReturnType rData = process(x.right);
+        //以下为信息整合
+        //同时对以x为头节点的子树也做同样的要求，也需要返回如ReturnType描述的全部信息
+        //以x为头节点的子树的最小值是：左树最小，右树最小以及x的值三者中最小的
+        int min = Math.min(x.value, Math.min(lDate.min, rData.min));
+        //以x为头节点的子树的最大值是：左树最大，右树最大以及x的值三者中最大的
+        int max = Math.max(x.value, Math.max(lDate.max, lDate.max));
+        //如果只考虑可能性一、可能性二，则以x为头节点的子树的最大搜索二叉树大小
+        int maxBSTSize = Math.max(lDate.maxBSTSize, rData.maxBSTSize);
+        //如果只考虑可能性一、可能性二，则以x为头节点的子树的最大搜索二叉树头节点
+        Node maxBSTHead = lDate.maxBSTSize >= rData.maxBSTSize ? lDate.maxBSTHead : rData.maxBSTHead;
+        //利用收集的信息，可以判断是否存在第三种可能性
+        if(lDate.maxBSTHead == x.left && rData.maxBSTHead == x.right
+                && x.value > lDate.max && x.value < rData.min){
+            maxBSTSize = lDate.maxBSTSize + rData.maxBSTSize + 1;
+            maxBSTHead = x;
+        }
+        return new ReturnType(maxBSTHead, maxBSTSize, min, max);
+    }
+
+
+    /**
+     * 判断二叉树是否为平衡二叉树
+     * 平衡二叉树性质：要么是一颗空树，要么任何一个节点的左右子树高度差的绝对值不超过1
+     * 使用树形dp套路：
+     * 第一步：以某个节点x为头节点的子树中，分析答案有哪些可能性，并且这种分析是以x的左子树、x的右子树和x整棵树的角度来考虑可能性
+     *       可能性一：如果左子树是不平衡的，则以x为头节点的树就是不平衡的
+     *       可能性二：如果右子树是不平衡的，则以x为投加点的树就是不平衡的
+     *       可能性三：如果x的左子树和右子树高度差超过1，则以x为头节点的树就是不平衡的
+     *       可能性四：如果上面的可能性都没中，那么以x为头节点的树是平衡的
+     * 第二步：根据第一步的可能性分析，列出所有需要的信息。左子树和右子树都要知道各自是否是平衡的，以及高度这两个信息
+     * 第三步：根据第二步信息汇总
+     * 第四步：设计递归函数
+     */
+
+    public boolean isBalanced(Node head){
+        return process1(head).isBalanced;
+    }
+
+    /**
+     * 汇总后的信息类
+     */
+    class ReturnType1{
+        public boolean isBalanced;
+        public int height;
+
+        public ReturnType1(boolean isBalanced, int height) {
+            this.isBalanced = isBalanced;
+            this.height = height;
+        }
+    }
+
+    /**
+     * 判断平衡二叉树递归方法
+     * @param x
+     * @return
+     */
+    public ReturnType1 process1(Node x){
+        if(x == null){
+            return new ReturnType1(true, 0);
+        }
+        ReturnType1 lData = process1(x.left);
+        ReturnType1 rData = process1(x.right);
+        int height = Math.max(lData.height, rData.height) + 1;
+        boolean isBalanced = lData.isBalanced && rData.isBalanced && Math.abs(lData.height - rData.height) < 2;
+        return new ReturnType1(isBalanced, height);
     }
 
 
