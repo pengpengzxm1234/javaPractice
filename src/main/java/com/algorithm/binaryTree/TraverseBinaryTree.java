@@ -737,7 +737,7 @@ public class TraverseBinaryTree {
 
     /********************
      *
-     * 通过有序数组生成平衡搜索二叉树
+     * 根据后序数组重建搜索二叉树
      * 问题1、给定一个数组arr，已知其中没有重复值，判断arr是否可能是节点类型为整型的搜索二叉树后续遍历的结果
      * 问题2、如果整型数组arr中没有重复值，且已知是一颗搜索二叉树的后续遍历结果，通过数组arr重构二叉树
      *************************/
@@ -747,6 +747,7 @@ public class TraverseBinaryTree {
      * 后续遍历，数组中最后一个节点是根节点；
      * 根据搜索二叉树的特点，比后序数组最后一个元素小的数组会在数组的左边，比后序数组最后一个元素大的数组会在数组的右边
      * 左边数组相当于数组的左子树，右边数组相当于数组的右子树，只要递归的进行如上判断即可
+     * 如arr=[2,1,3,6,5,7,4],比4小的部分为[2,1,3] 比4大的部分为[6,5,7],如果不满足这种情况，则说明这个数组一定不可能是搜索二叉树后序遍历的结果
      */
     public boolean isPostArray(int[] arr){
         return isPost(arr, 0, arr.length - 1);
@@ -766,7 +767,7 @@ public class TraverseBinaryTree {
         if(less == -1 || more == end){//所有节点都在左子树或者都在右子树
             return isPost(arr, start, end - 1);
         }
-        if(less != more - 1){//如果是平衡二叉树的后序遍历，less和more应该是相临的
+        if(less != more - 1){//如果是搜索二叉树的后序遍历，less和more应该是相临的
             return false;
         }
         return isPost(arr, start, less) && isPost(arr, more, end - 1);
@@ -798,6 +799,29 @@ public class TraverseBinaryTree {
         head.right = posToBST(posArr, more, end - 1);
         return head;
     }
+
+    /***************************************
+     *
+     * 通过有序数组生成平衡搜索二叉树
+     * 问题：给定一个有序数组sortArr，已知其中没有重复值，用这个有序数组生成一棵平衡搜索二叉树，
+     * 并且该搜索二叉树中序遍历的结果与sortArr一致
+     * 解答：有序数组中最中间的数生成搜索二叉树的头节点，然后用这个数左边的数组生成左子树，用右边的数组生成右子树即可
+     *************************************/
+     public Node generateTree(int[] sortArr){
+         if(null == sortArr)return null;
+         return generate(sortArr, 0, sortArr.length - 1);
+     }
+
+     public Node generate(int[] sortArr, int start, int end){
+        if(start > end){
+            return null;
+        }
+        int mid = (start + end) / 2;
+        Node head = new Node(sortArr[mid]);
+        head.left = generate(sortArr, start, mid - 1);
+        head.right = generate(sortArr, mid + 1, end);
+        return head;
+     }
 
 
     /**
