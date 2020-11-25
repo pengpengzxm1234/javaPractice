@@ -1,5 +1,6 @@
 package com.algorithm.binaryTree;
 
+import com.algorithm.kmp.KMP;
 import sun.rmi.server.InactiveGroupException;
 
 import java.util.*;
@@ -894,9 +895,11 @@ public class TraverseBinaryTree {
      * 首先把t1和t2按照先序遍历的方式序列化，然后验证str2是否str1的子串即可
      * 使用KMP算法
      */
-
-
-
+    public boolean isSubTree(Node t1, Node t2){
+        String t1Str = serialByPre(t1);//先序序列化
+        String t2Str = serialByPre(t2);
+        return KMP.getIndexOf(t1Str, t2Str) != -1;
+    }
 
 
     /**
