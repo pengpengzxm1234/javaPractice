@@ -2,10 +2,7 @@ package com.algorithm.binaryTree;
 
 import sun.rmi.server.InactiveGroupException;
 
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 import java.util.regex.Matcher;
 
 /**
@@ -738,7 +735,7 @@ public class TraverseBinaryTree {
     /********************
      *
      * 根据后序数组重建搜索二叉树
-     * 问题1、给定一个数组arr，已知其中没有重复值，判断arr是否可能是节点类型为整型的搜索二叉树后续遍历的结果
+     * 问题1、给定一个数组arr，已知其中没有重复值，判断arr是否可能是节点类型为整型的搜索二叉树后序遍历的结果
      * 问题2、如果整型数组arr中没有重复值，且已知是一颗搜索二叉树的后续遍历结果，通过数组arr重构二叉树
      *************************/
 
@@ -834,6 +831,70 @@ public class TraverseBinaryTree {
      * 以及右子树的先序、中序数组，先根据右子树的划分设置好后序数组，再根据左子树的划分，从右边到左边
      * 依次设置好后序数组的全部位置
      *****************/
+     public int[] getPosArray(int[] pre, int[] in){
+         if(pre == null || in == null){
+             return null;
+         }
+         int len = pre.length;
+         int[] pos = new int[len];
+         HashMap<Integer, Integer> map = new HashMap<>();
+         for(int i = 0; i< len; i++){//保存中序数组中每个元素的索引位置
+             map.put(in[i], i);
+         }
+         setPos(pre, 0, len - 1, in, 0, len -1, pos, len - 1, map);
+         return pos;
+     }
+
+     //从右往左依次填好后序数组s
+     //si为后序数组s该填的位置
+    //返回值为s该填的下一个位置
+     public int setPos(int[] p, int pi, int pj, int[] n, int ni, int nj, int[] s, int si, HashMap<Integer, Integer> map){
+         if(pi > pj){
+             return si;
+         }
+         s[si--] = p[pi];//子树的后序数组的最后一个元素是先序数组的第一个元素
+         int i = map.get(p[pi]);//找到根节点在中序数组的位置，为了划该根节点的左右子树
+         //先右子树
+         si = setPos(p, pj - nj + i+ 1, pj, n, i +1, nj, s, si, map);//填完所有右子树后来到左子树的位置si
+         return setPos(p, pi+1, pj - nj + i, n, ni, i-1, s, si, map);
+     }
+
+    /**
+     *
+     * 判断t1树是否包含t2树全部的拓扑结构
+     * 问题：给定彼此独立的两棵树的头节点分别为t1和t2，判断t1树是否包含t2树全部的拓扑结构
+     * 分析：t1的每棵子树上都有可能匹配出t2，因此需要每个子树都检查一遍
+     * 如果t1的节点数为N,t2的节点数为M，则该方法的时间复杂度为O（N*M）；
+     */
+    public boolean contains(Node t1, Node t2){
+        if(t2 == null){
+            return true;
+        }
+        if(t1 == null){
+            return false;
+        }
+       return check(t1, t2) || contains(t1.left, t2) || contains(t1.right, t2);
+    }
+
+    //h为t1中的一个节点作为头节点
+    public boolean check(Node h, Node t2){
+        if(t2 == null){
+            return true;
+        }
+        if(h == null || h.value != t2.value){
+            return false;
+        }
+        return check(h.left, t2.left) && check(h.right, t2.right);
+    }
+
+    /**
+     * 判断t1树中是否有与t2树拓扑结构完全相同的子树
+     * ☆☆☆
+     * 使用时间复杂度为O(N+M)的方法
+     * 首先把t1和t2按照先序遍历的方式序列化，然后验证str2是否str1的子串即可
+     * 使用KMP算法
+     */
+
 
 
 
