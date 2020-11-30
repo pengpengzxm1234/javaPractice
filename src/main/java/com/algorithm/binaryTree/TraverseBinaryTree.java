@@ -1065,6 +1065,88 @@ public class TraverseBinaryTree {
         }
     }
 
+    /**
+     * 问题3
+     * tarjan算法与并查集解决二叉树节点间最近公共祖先的批量查询问题
+     * （未完成）
+     */
+
+
+    /*************************************************************
+     * 在二叉树中找到连个节点的最近公共祖先
+     * 分隔结束
+     * *******************************************************/
+
+
+    /**
+     * 二叉树节点间最大距离问题
+     * 问题：从二叉树的节点A出发，可以向上或者向下走，但沿途的节点只能经过一次，当到达节点B时，路径上的节点数叫做A到B
+     *      的距离
+     * 要求：如果二叉树的节点数为N，时间复杂度要求为O(N)
+     * 分析：本题解法的整体过程为树形dp套路
+     * 1、以某节点x为头节点的子树中，分析答案的可能性，并且这种分析是以X的左子树 X的右子树 X整棵树的角度来考虑可能性
+     *    可能性一：以X为头节点的子树，最大距离可能是左子树上的最大距离
+     *    可能性二：以X为头节点的子树，最大距离可能是右子树上的最大距离
+     *    可能性三：以X为头节点的子树，最大距离可能是从X的左子树距离X最远的节点，先到达x，然后走到X的右子树离X最远的节点。
+     *             也就是左子树高度+右子树高度+1
+     */
+    public class ReturnType2{
+        public int maxDistance;
+        public int height;
+
+        public ReturnType2(int maxDistance, int height){
+            this.maxDistance = maxDistance;
+            this.height = height;
+        }
+    }
+
+    public ReturnType2 process2(Node head){
+        if(head == null){
+            return new ReturnType2(0, 0);
+        }
+        ReturnType2 leftData = process2(head.left);
+        ReturnType2 rightData = process2(head.right);
+        int height = Math.max(leftData.height, rightData.height) + 1;
+        int maxDistance = Math.max(leftData.height + rightData.height + 1, Math.max(leftData.maxDistance, rightData.maxDistance));
+        return new ReturnType2(maxDistance, height);
+    }
+
+    public int getMaxDistance(Node head){
+        return process2(head).maxDistance;
+    }
+
+    /**
+     * 统计完全二叉树的节点数
+     * 方法：如果二叉树层数为h，可做到时间复杂度O(h^2)
+     * 根据二叉树的层数.以及满二叉树特性来计算
+     * 通过判断右子树是否到达最低层，判断左子树是否是满二叉树，从而可判断左子树或者右子树的节点数
+     */
+    public int nodeNum(Node head){
+        if(head == null){
+            return 0;
+        }
+        return bs(head, 1, mostLeftLevel(head, 1));
+    }
+
+    public int bs(Node node, int l, int h){
+        if(l == h){
+            return 1;
+        }
+        if(mostLeftLevel(node.right, l + 1) == h){//右子树的最左节点能到最后一层，左子树为满二叉树
+            return (l << (h-l)) + bs(node.right, l + 1, h);
+        }else {
+            return (l << (h - l - 1)) + bs(node.left, l + 1, h);
+        }
+
+    }
+
+    public int mostLeftLevel(Node node, int level){//有多少个最左节点，高度就是多少
+        while (node != null){
+            level++;
+            node = node.left;
+        }
+        return level - 1;
+    }
 
 
 
