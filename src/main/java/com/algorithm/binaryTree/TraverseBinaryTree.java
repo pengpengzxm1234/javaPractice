@@ -901,6 +901,173 @@ public class TraverseBinaryTree {
         return KMP.getIndexOf(t1Str, t2Str) != -1;
     }
 
+    /**
+     * 在二叉树中找到连个节点的最近公共祖先
+     * 问题1：给定一棵二叉树的头节点head,以及这棵树中的两个节点o1和o2，请返回o1和o2的最近公共祖先节点
+     * 问题2：如果查询两个节点的最近公共祖先的操作十分频繁，想办法让单条的查询时间减少
+     * 问题3：给定二叉树的头节点head，同时给定所有想要进行的查询。二叉树的节点数量为N，查询条数为M，请在时间
+     *       复杂度O（N+M）内返回所有查询的结
+     */
+
+    /**
+     * 问题1
+     * 后续遍历二叉树，假设遍历到的当前节点为cur。因为后续遍历，所以先处理cur的两颗子树，假设cur左子树left，右子树right
+     * 1、如果发现curr等于null 或者 o1 或者 o2，则返回cur
+     * 2、如果left 和 right都是空，说明左子树和右子树都没有发现过o1 和 o2，返回null；
+     * 3、如果left 和 right都不为空桶，说明左子树或者右子树发现过o1或者o2，右子树也发现过o1或者o2，说明 o1向上的过程中与
+     *    o2 向上的过程中，首次下cur相遇，返回cur
+     * 4、如果left和right中有一个为空，一个不为空，假设不空的是node，此时node有两种可能，要么是o2 o1中的一个，要么已经是
+     *    o2 o1的最近公共祖先，直接返回node
+     */
+    public Node lowestAncenstor(Node head, Node o1, Node o2){
+        if(head == null || head == o1 || head == o2){
+            return head;
+        }
+        Node left = lowestAncenstor(head.left, o1, o2);
+        Node right = lowestAncenstor(head.right, o1, o2);
+        if(left != null && right != null){
+            return head;
+        }
+        return left != null ? left : right;
+    }
+
+    /**
+     * 问题2
+     * 先花较大力气建立一种记录，以后执行每次查询时就可以完全根据记录进行查询
+     * 结构1：建立二叉树中每个节点对应的父节点信息，是一张hash表
+     * 解法1：
+     *    将其中要查询的一个节点所有相关的父节点放入另一个hash1表中，
+     *    从要查询的另一个节点开始，向上逐渐移动到头节点，如果发现头节点在hash1中，则该节点就是最近公共祖先
+     * 构建结构1的时间复杂度O(N) 额外空间复杂度O(N),查询时，时间复杂度O(h),h为二叉树高度
+     */
+    public class Record1{
+        private HashMap<Node, Node> map;
+
+        public Record1(Node head){
+            map = new HashMap<>();
+            if(head != null){
+                map.put(head, null);
+            }
+            setMap(head);
+        }
+
+        private void setMap(Node head){
+            if(head == null){
+                return;
+            }
+            if(head.left != null){
+                map.put(head.left, head);
+            }
+            if(head.right != null){
+                map.put(head.right, head);
+            }
+            setMap(head.left);
+            setMap(head.right);
+        }
+
+        public Node query(Node o1, Node o2){
+            HashSet<Node> path = new HashSet<>();
+            while (map.containsKey(o1)){
+                path.add(o1);
+                o1 = map.get(o1);
+            }
+            while (!path.contains(o2)){
+                o2 = map.get(o2);
+            }
+            return o2;
+        }
+    }
+    /**
+     * 结构2：直接建立任意两个节点之间的最近公共祖先记录，便于以后查询
+     * 构建结构2的时间复杂度O(N^2) 额外空间复杂度O(N^2),查询时，时间复杂度O(1)
+     * 建立记录：
+     * 1、对二叉树中的每棵子树（一共N棵）都进行步骤2
+     * 2、假设子树的头节点为h，h所有后代节点和h节点的最近公共祖先都是h，记录下来。
+     *    h左子树的每个节点与h右子树的每个节点的最近公共祖先是h，记录下来
+     */
+    public class Record2{
+        private HashMap<Node, HashMap<Node, Node>> map;
+
+        public Record2(Node head){
+            map = new HashMap<>();
+            map.put(head, null);
+            initMap(head);
+            setMap(head);
+        }
+
+        private void initMap(Node head){
+            if(head == null){
+                return;
+            }
+            map.put(head, new HashMap<Node, Node>());
+            initMap(head.left);
+            initMap(head.right);
+        }
+
+        private void setMap(Node head){
+            if(head == null){
+                return;
+            }
+            headRecord(head.left, head);
+            headRecord(head.right, head);
+            subRecord(head);
+            setMap(head.left);
+            setMap(head.right);
+        }
+
+        private void headRecord(Node n, Node h){
+            if(null == n){
+                return;
+            }
+            map.get(n).put(h, h);
+            headRecord(n.left, h);
+            headRecord(n.right, h);
+        }
+
+        private void subRecord(Node head){
+            if(null == head){
+                return;
+            }
+            preLeft(head.left, head.right, head);
+            subRecord(head.left);
+            subRecord(head.right);
+        }
+
+        private void preLeft(Node l, Node r, Node h){
+            if(l == null){
+                return;
+            }
+            preRight(l, r, h);
+            preLeft(l.left, r, h);
+            preLeft(l.right, r, h);
+        }
+
+        private void preRight(Node l, Node r, Node h){
+            if(r == null){
+                return;
+            }
+            preRight(l, r, h);
+            preRight(l, r.left, h);
+            preRight(l, r.right, h);
+        }
+
+        public Node query(Node o1, Node o2){
+            if(o1 == o2){
+                return o1;
+            }
+            if(map.containsKey(o1)){
+                return map.get(o1).get(o2);
+            }
+            if(map.containsKey(o2)){
+                return map.get(o2).get(o1);
+            }
+            return null;
+        }
+    }
+
+
+
+
 
     /**
      *
