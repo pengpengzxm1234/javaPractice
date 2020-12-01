@@ -1128,14 +1128,14 @@ public class TraverseBinaryTree {
         return bs(head, 1, mostLeftLevel(head, 1));
     }
 
-    public int bs(Node node, int l, int h){
-        if(l == h){
+    public int bs(Node node, int level, int height){
+        if(level == height){
             return 1;
         }
-        if(mostLeftLevel(node.right, l + 1) == h){//右子树的最左节点能到最后一层，左子树为满二叉树
-            return (l << (h-l)) + bs(node.right, l + 1, h);
+        if(mostLeftLevel(node.right, level + 1) == height){//右子树的最左节点能到最后一层，左子树为满二叉树
+            return (1 << (height-level)) + bs(node.right, level + 1, height);//左移以为相当于乘2 2^(h-l) == （h-l） 个2相乘
         }else {
-            return (l << (h - l - 1)) + bs(node.left, l + 1, h);
+            return (1 << (height - level - 1)) + bs(node.left, level + 1, height);
         }
 
     }
