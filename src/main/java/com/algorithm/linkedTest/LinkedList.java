@@ -132,4 +132,49 @@ public class LinkedList {
         return pre;
     }
 
+    /**
+     * 单链表的选择排序
+     * 问题：给定一个无序单链表的头节点head，实现单链表的选择排序
+     * 要求：额外空间复杂度为O(1)
+     */
+    public Node selectionSort(Node head){
+        Node tail = null;//排序部分尾部
+        Node cur = head;//未排序部分头部
+        Node smallPre = null;//最小节点的前一个节点
+        Node small = null;//最小的节点
+        while (cur != null){
+            small = cur;
+            smallPre = getSamllestPreNode(cur);
+            if(smallPre != null){
+                small = smallPre.next;
+                smallPre.next = small.next;//删除最小节点，链接剩余部分
+            }
+            cur = cur == small ? cur.next : cur;
+            if(tail == null){
+                head = small;
+            }else {
+                tail.next = small;
+            }
+            tail = small;
+        }
+        return head;
+    }
+
+    public Node getSamllestPreNode(Node head){
+        Node smallPre = null;
+        Node small = head;
+        Node pre = head;
+        Node cur = head.next;
+        while (cur != null){
+            if(cur.value < small.value){
+                smallPre = pre;
+                small = cur;
+            }
+            pre = cur;
+            cur = cur.next;
+        }
+        return smallPre;
+    }
+
+
 }
