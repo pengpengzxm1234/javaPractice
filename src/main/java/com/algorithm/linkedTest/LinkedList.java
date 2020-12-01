@@ -170,7 +170,7 @@ public class LinkedList {
                 smallPre = pre;
                 small = cur;
             }
-            pre = cur;
+            pre = cur;//指针后移
             cur = cur.next;
         }
         return smallPre;
