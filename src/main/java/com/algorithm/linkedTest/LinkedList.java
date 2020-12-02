@@ -1,5 +1,7 @@
 package com.algorithm.linkedTest;
 
+import java.util.HashSet;
+
 public class LinkedList {
     public class Node{
         public int value;
@@ -174,6 +176,54 @@ public class LinkedList {
             cur = cur.next;
         }
         return smallPre;
+    }
+
+    /**
+     * 删除无序单链表中值重复出现的节点
+     * 方法1：如果链表长度为N，时间复杂度达到O(N)
+     * 方法2：额外空间复杂度为O(1)
+     */
+    /**
+     * 方法一，利用哈希表，时间复杂度为O(N)，额外空间复杂度为O(N)
+     */
+    public void removeRep1(Node head){
+        if(head == null){
+            return;
+        }
+        HashSet<Integer> set = new HashSet<>();
+        Node pre = head;
+        Node cur = head.next;
+        set.add(head.value);
+        while (cur != null){
+            if(set.contains(cur.value)){
+                pre.next = cur.next;
+            }else {
+                set.add(cur.value);
+                pre = cur;
+            }
+            cur = cur.next;
+        }
+    }
+    /**
+     * 方法二：类似选择排序，时间复杂度O(N^2),额外空间复杂度O(1)
+     */
+    public void removeRep2(Node head){
+        Node cur = head;
+        Node pre = null;//遍历链表过程中的前一个节点
+        Node next = null;//遍历链表过程中要去和cur比较的节点
+        while (cur != null){
+            pre = cur;
+            next = cur.next;
+            while (cur != null){
+                if(cur.value == next.value){
+                    pre.next = next.next;
+                }else {
+                    pre = next;
+                }
+                next = next.next;
+            }
+            cur = cur.next;
+        }
     }
 
 
