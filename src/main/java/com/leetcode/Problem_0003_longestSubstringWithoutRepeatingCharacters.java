@@ -26,7 +26,7 @@ public class Problem_0003_longestSubstringWithoutRepeatingCharacters {
         int pre = -1;//前一个位置,i-1位置的字符往左能够到达的最远的位置
         int cur = 0;//当前位置上的字符能够到达的最远位置
         for(int i = 0; i != chas.length; i++){
-            //比较前一个能够到达的最远的位置和上一次出现该字符出现的位置， 大的值，对应距离i最近的那个
+            //比较前一个能够到达的最远的位置和上一次出现该字符出现的位置， 那个值大，对应距离i最近的那个位置
             pre = Math.max(pre, map[i]);//更新成i结尾的信息
             cur = i - pre;
             len = Math.max(len, cur);
