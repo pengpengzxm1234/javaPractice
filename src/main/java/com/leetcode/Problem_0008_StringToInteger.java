@@ -69,7 +69,7 @@ public class Problem_0008_StringToInteger {
      */
     public static boolean isValid(char[] chars){
         //开头不是正负号，且也不是数字字符
-        if(chars[0] != '-' && chars[0] != '+' && (chars[0]< '0' || chars[0] > '9')){
+        if(chars[0] != '-' && chars[0] != '+' && (chars[0] < '0' || chars[0] > '9')){
             return false;
         }
         //字符串长度只有1且还是'+'或者'-'符号

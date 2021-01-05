@@ -16,7 +16,8 @@ public class Problem_0007_ReverseInteger {
      * 注：正数用负数来处理是一个常用做法,为了防止正数的溢出
      */
     public static int reverse(int x){
-        boolean neg = ((x >>> 31) & 1) == 1;//用位运算判断整数的正负，x >>> 31代表符号位，即最低位
+        //用位运算判断整数的正负（等于1是负数，反之是正数），x >>> 31代表符号位，即最低位
+        boolean neg = ((x >>> 31) & 1) == 1;
         x = neg ? x : -x;
         //m和n用来检测溢出
         int m = Integer.MIN_VALUE / 10;
