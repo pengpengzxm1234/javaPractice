@@ -51,7 +51,8 @@ public class Problem_0015_3Sum {
             }else if(nums[L] + nums[R] < target){
                 L++;
             }else {
-                if(L == begin || nums[L - 1] != nums[L]){//判断当前位置的值是否和前一位的值相同，相同跳过
+                //判断当前位置的值是否和前一位的值相同，相同跳过
+                if(L == begin || nums[L - 1] != nums[L]){
                     List<Integer> cur = new ArrayList<>();
                     cur.add(L);
                     cur.add(R);
