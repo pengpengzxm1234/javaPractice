@@ -53,6 +53,10 @@ public class Problem_0022_GenerateParentheses {
         }
     }
 
+
+
+
+
     // 不剪枝的做法
     public static List<String> generateParenthesis2(int n) {
         char[] path = new char[n << 1];
