@@ -45,7 +45,7 @@ public class Problem_0023_MergeKSortedLists {
         if(pre.next != null){
             heap.add(pre.next);
         }
-        while (head != null){
+        while (!heap.isEmpty()){
             ListNode cur = heap.poll();
             pre.next = cur;
             pre = cur;
