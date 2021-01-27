@@ -10,6 +10,7 @@ package com.leetcode;
  *
  * 要求：时间复杂度O(N) 空间复杂度O(1)
  *
+ * 荷兰国旗问题的升级基础班第三节 随机快排
  */
 public class Problem_0041_FirstMissingPositive {
 
@@ -27,7 +28,7 @@ public class Problem_0041_FirstMissingPositive {
      */
     public static int firstMissingPositive(int[] arr){
         int l = 0;
-        int r = arr.length;
+        int r = arr.length;//预期在arr.length位置是最优的
         while (l < r){
             if(arr[l] == l + 1){
                 l++;
