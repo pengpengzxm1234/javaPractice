@@ -29,7 +29,7 @@ public class Problem_0042_TrappingRainWater {
                 leftMax = Math.max(leftMax, arr[L++]);//更新左侧最大值,L向右移动
             }else {
                 warter += Math.max(0, rightMax - arr[R]);
-                rightMax = Math.max(rightMax, arr[R++]);//更新右侧最大值，R向左移动
+                rightMax = Math.max(rightMax, arr[R--]);//更新右侧最大值，R向左移动
             }
         }
         return warter;
