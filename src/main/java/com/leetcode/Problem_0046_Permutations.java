@@ -44,4 +44,38 @@ public class Problem_0046_Permutations {
     }
 
 
+    /**
+     * 解法2 换位组合
+     */
+    public static List<List<Integer>> permutations(int[] nums){
+        if(nums.length == 0){
+            return null;
+        }
+        List<List<Integer>> ans = new ArrayList<>();
+        process(nums, 0, ans);
+        return ans;
+    }
+
+    public static void process(int[] nums, int index, List<List<Integer>> ans){
+        if(index == nums.length){
+            ArrayList<Integer> cur = new ArrayList<>();
+            for(int num : nums){
+                cur.add(num);
+            }
+            ans.add(cur);
+        }else {
+            for(int j = index; j< nums.length;j++){
+                swap(nums, index, j);//和自己或者或后面的数交换位置
+                process(nums, index + 1, ans);
+                swap(nums, index, j);//还原，不还原会有问题
+            }
+        }
+    }
+
+    public static void swap(int[] nums, int i, int j){
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+
 }
