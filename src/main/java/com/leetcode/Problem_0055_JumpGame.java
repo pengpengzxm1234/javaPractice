@@ -18,7 +18,7 @@ public class Problem_0055_JumpGame {
             /*if(max >= nums.length - 1){
                 return true;
             }*/
-            if(i > max){
+            if(i > max){//最大的位置无法覆盖到i，即无法到达i
                 return false;
             }
             max = Math.max(max, i + nums[i]); //i + num[i] 代表i位置开始能够到达的最右位置

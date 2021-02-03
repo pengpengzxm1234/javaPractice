@@ -4,7 +4,7 @@ package com.leetcode;
  *  leetcode高频讲解六
  *  和55题绑定在一起讲
  *  从0位置跳跃到n-1位置，返回至少跳跃次数
- *
+ *  i位置的值n代表可以移动小于n的范围内任部署，即如果n是2，可以移动1步和两步
  */
 public class Problem_0045_JumpGameII {
 
