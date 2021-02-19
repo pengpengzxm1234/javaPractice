@@ -62,7 +62,7 @@ public class Problem_0002_AddTwoNumbers {
             next = head.next;
             head.next = pre;
             pre = head;
-            next = head;
+            head = next;
         }
         return pre;
     }
