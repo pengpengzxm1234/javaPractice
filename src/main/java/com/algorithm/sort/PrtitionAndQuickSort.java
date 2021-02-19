@@ -1,5 +1,7 @@
 package com.algorithm.sort;
 
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * 快速排序
  */
@@ -81,5 +83,11 @@ public class PrtitionAndQuickSort {
         int[] equalArea = netherlandsFlag(arr, L, R);
         process3(arr, L, equalArea[0] - 1);
         process3(arr, equalArea[0] + 1, R);
+    }
+
+    public static void main(String[] args){
+        int[] arr = {4, 2, 6, 3, 10, 9};
+        quickSort3(arr);
+        System.out.println(JSONObject.toJSONString(arr));
     }
 }
