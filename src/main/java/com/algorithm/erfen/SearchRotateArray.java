@@ -66,13 +66,8 @@ public class SearchRotateArray {
     }
 
     public static int getMinIndex(int[] arr, int index, int target){
-        while (index-1 >= 0){
-            if(arr[index-1] == target){
-                index--;
-                continue;
-            }else {
-                return index;
-            }
+        while (index-1 >= 0 && arr[index-1] == target){
+            index--;
         }
         return index;
     }
@@ -81,14 +76,77 @@ public class SearchRotateArray {
      * 非递归调用
      */
     public static int search(int[] arr, int target){
+        if(arr == null || arr.length == 0){
+            return -1;
+        }
+        if(arr[0] == target){
+            return 0;
+        }
+        int left = 1;
+        int right = arr.length - 1;
+        int mid = 0;
+        while (left <= right){
+            mid = (left + right) / 2;
+            if(arr[mid] == target){
+                if(arr[mid] == arr[left]){
+                    return left;
+                }else {
+                    return getMinIndex(arr, mid, target);
+                }
+            }
+            //arr[mid] != target
+            if(arr[mid] == arr[left] && arr[mid] == arr[right]){
+                while (left != mid && arr[mid] == arr[left]){
+                    left++;
+                }
+                if(left == mid){
+                    left = mid + 1;
+                    continue;
+                }
+            }
+            //arr[mid] != arr[left]
+            //arr[mid] != arr[right]
+            if(arr[left] != arr[mid]){
+                if(arr[left] <arr[mid]){//left~mid有序
+                    if(target >= arr[left] && target < arr[mid]){
+                        right = mid - 1;
+                    }else {
+                        left = mid + 1;
+                    }
+                }else {//mid - right 有序
+                    if(target > arr[mid] && target <= arr[right]){
+                        left = mid + 1;
+                    }else {
+                        right = mid - 1;
+                    }
+                }
+            }else {//arr[left] == arr[mid] => arr[mid] != arr[right]
+                if(arr[mid] < arr[right]){//mid - right 有序
+                    if(target > arr[mid] && target <= arr[right]){
+                        left = mid + 1;
+                    }else {
+                        right = mid - 1;
+                    }
+                }else {//left~mid有序
+                    if(target >=arr[left] && target < arr[mid]){
+                        right = mid - 1;
+                    }else {
+                        left = mid + 1;
+                    }
+                }
+            }
+        }
         return -1;
     }
 
 
 
     public static void main(String[] args){
-        int[] arr =new int[]{12, 20, -21, -21, -19, -14, -11, -8, -8, -8, -6, -6, -4, -4, 0, 1, 5, 5, 6, 11, 11, 12};
-        System.out.println(searchRotateArrayIndex(arr, 12));
+        int[] arr =new int[]{1, 4, 4, 5, 5, 12, 17, 17, 20, 20, 21, 22, 22, 24, 24, 27, 29, 30, 32, 41, 41,
+                45, 45, 46, 47, 49, 53, 57, 57, 63, 63, -63, -63, -62, -56, -52, -48, -47, -44, -43, -43,
+                -42, -41, -39, -39, -37, -34, -33, -32, -32, -29, -26, -25, -23, -16, -13, -11, -8, -7, -7, -6, -4, -2, -2};
+
+        System.out.println(search(arr, -23));
     }
 
 }
