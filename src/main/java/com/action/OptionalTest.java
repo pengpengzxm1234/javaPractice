@@ -133,6 +133,21 @@ public class OptionalTest {
                 .ifPresent(users -> users.forEach(u -> System.out.println(u.toString())));
     }
 
+    public void testElstThrow(){
+        // 没钱就会抛异常
+        try {
+            System.out.println(Optional.ofNullable("").orElseThrow(()->new Exception()));  // 没钱抛异常
+        } catch (Throwable throwable) {
+            System.out.println("没有钱");
+            throwable.printStackTrace();
+        }
+    }
+
+    public void testEmpty(){
+        Optional optional = Optional.empty();
+        System.out.println("optional:"+optional.isPresent());
+    }
+
     public static void main(String[] args) {
 
         OptionalTest test = new OptionalTest();
@@ -140,11 +155,13 @@ public class OptionalTest {
         user.setAddress(test.setAddress("city", "zhongguo"));
         test.simpleOptional(user);
         test.simpleNull(user);
-        System.out.println(test.simpleMap(user));
+        System.out.println(" map =======" + test.simpleMap(user));
         List<User> users = new ArrayList<>();
         users.add(user);
         users.add(test.setUser("lisi", 13));
         test.simpleList(null);
+        test.testElstThrow();
+        test.testEmpty();
     }
 
 }
