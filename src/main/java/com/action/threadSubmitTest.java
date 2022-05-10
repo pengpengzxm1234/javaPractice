@@ -5,10 +5,7 @@ import io.netty.util.concurrent.DefaultThreadFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class threadSubmitTest {
     public static ThreadPoolExecutor executor = new ThreadPoolExecutor(2,
@@ -18,19 +15,30 @@ public class threadSubmitTest {
     public void testSubmit() throws ExecutionException, InterruptedException {
         List<Integer> list = new ArrayList<>();
         Long start = System.currentTimeMillis();
-        for(int i = 0; i< 100000; i++){
+        List<Future> futures = new ArrayList<>();
+        for(int i = 0; i< 100; i++){
             final int nums = i;
-            Integer num =  executor.submit(()->{
+            futures.add(executor.submit(()->{
                 //System.out.println( Thread.currentThread().getName()+ " : "+nums);
+                Thread.sleep(10);
                 return nums + 1;
-            }).get();
-            list.add(num);
+            }));
         }
-        System.out.println("spend:" + (System.currentTimeMillis() - start));
-
+        System.out.println("spend1:" + (System.currentTimeMillis() - start));
+        futures.forEach(future -> {
+            try {
+                future.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        });
         start = System.currentTimeMillis();
         List<Integer> list1 = new ArrayList<>();
-        for(int i = 0; i< 100000; i++){
+        for(int i = 0; i< 100; i++){
+            //System.out.println( Thread.currentThread().getName()+ " : "+i + 1);
+            Thread.sleep(10);
             list1.add(i + 1);
         }
         System.out.println("spend:" + (System.currentTimeMillis() - start));

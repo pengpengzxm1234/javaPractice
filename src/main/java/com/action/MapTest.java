@@ -9,9 +9,13 @@ import java.util.Map;
 public class MapTest {
 
     public void mapToJson(){
-        Map<Integer, String> map = new HashMap<>();
-        map.put(2, "jaja");
-        map.put(3,"jls");
+        HashMap<Integer, String> map = new HashMap<>();
+        int i = 0;
+        while (i < 1000){
+            map.put(i, String.valueOf(i));
+            i++;
+        }
+
 
         System.out.println(JSONObject.toJSONString(map));
     }

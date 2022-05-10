@@ -133,6 +133,7 @@ public class OptionalTest {
                 .ifPresent(users -> users.forEach(u -> System.out.println(u.toString())));
     }
 
+
     public void testElstThrow(){
         // 没钱就会抛异常
         try {
@@ -142,6 +143,7 @@ public class OptionalTest {
             throwable.printStackTrace();
         }
     }
+
 
     public void testEmpty(){
         Optional optional = Optional.empty();

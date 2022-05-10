@@ -1,5 +1,6 @@
 package com.action;
 
+import java.beans.PersistenceDelegate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -84,9 +85,15 @@ public class TestStreamApi {
         list.stream().map(person -> person.getCountry()).distinct().collect(Collectors.toList()).forEach(System.out::println);
     }
 
+    public void testNull(){
+        List<Person> list = null;
+        list.stream().map(Person::getAge).collect(Collectors.toList());
+    }
+
 
     public static void main(String[] args){
         TestStreamApi testStreamApi = new TestStreamApi();
-        testStreamApi.testStreamFilter();
+        //testStreamApi.testStreamFilter();
+        testStreamApi.testNull();
     }
 }
