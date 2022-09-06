@@ -1,5 +1,7 @@
 package com.action;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 /**
  * @author yourname <yourname@baijiahulian.com>
  * Created on 2022-07-08
@@ -7,9 +9,9 @@ package com.action;
 public class FinallyTest {
 
     public static void main(String[] args) {
-        int a = 12;
+        long a = 0;
         try {
-            if(a == 12){
+            if(a == NumberUtils.LONG_ZERO){
                 System.out.println("a返回了");
                 return;
             }

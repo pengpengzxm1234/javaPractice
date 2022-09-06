@@ -50,14 +50,20 @@ public class LocalDateTest{
         return Long.valueOf(format);
     }
 
+    public void testPlusMonth(){
+       LocalDateTime localDateTime = LocalDateTime.now();
+       System.out.println(localDateTime.plusMonths(1L).isAfter(localDateTime));
+    }
+
    public static void main(String[] args){
        LocalDateTest localDateTest = new LocalDateTest();
        //localDateTest.localTimeTest();
        //System.out.println(localDateTest.getYYYY_MM_DD_HH_MM_FromTimestampMinute(System.currentTimeMillis()));
-       System.out.println(localDateTest.localDateString2LocalDateMinute("20191220144140"));
-
-       LocalDateTime data = localDateTest.localDateString2LocalDateTime("2021-01-01 12:12:12");
-      System.out.println(data.toString());
+//       System.out.println(localDateTest.localDateString2LocalDateMinute("20191220144140"));
+//
+//       LocalDateTime data = localDateTest.localDateString2LocalDateTime("2021-01-01 12:12:12");
+//      System.out.println(data.toString());
+       localDateTest.testPlusMonth();
    }
 
 }
