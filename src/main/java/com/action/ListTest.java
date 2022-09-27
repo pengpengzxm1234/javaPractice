@@ -13,6 +13,7 @@ public class ListTest {
     public void testAddNull(){
         List<String> list = new ArrayList<>();
         list.add(null);
+        String result = list.stream().filter(StringUtils::isNotBlank).findFirst().orElse(null);
         System.out.println(list.size());
         System.out.println(JSONArray.toJSONString(list));
     }
@@ -48,6 +49,6 @@ public class ListTest {
 
     public static void main(String[] args) {
         ListTest test = new ListTest();
-        test.testSubList();
+        test.testAddNull();
     }
 }
