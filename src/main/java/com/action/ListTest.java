@@ -47,8 +47,13 @@ public class ListTest {
         System.out.println(value > 0);
     }
 
+    public void testInitSize(){
+        List<String> list = new ArrayList<>(20);
+        System.out.println(list.size());
+    }
+
     public static void main(String[] args) {
         ListTest test = new ListTest();
-        test.testAddNull();
+        test.testInitSize();
     }
 }

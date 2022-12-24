@@ -53,6 +53,12 @@ public class BigDecimalTest {
 
     }
 
+    public void testDivide(){
+        BigDecimal bg = new BigDecimal(10);
+        BigDecimal score = bg.divide(BigDecimal.valueOf(3), 2, RoundingMode.UP);
+        System.out.println("score:" + score);
+    }
+
     public static class Question{
         private String name;
         private BigDecimal score;
@@ -99,6 +105,7 @@ public class BigDecimalTest {
         BigDecimalTest test = new BigDecimalTest();
 //        test.caculation();
        // test.nullDNull();
-        test.round();
+       // test.round();
+        test.testDivide();
     }
 }
